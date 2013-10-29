@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class DispatcherServletInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
-	private static final Logger logger = LoggerFactory.getLogger(RootContext.class);
+//	private static final Logger logger = LoggerFactory.getLogger(RootContext.class);
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
