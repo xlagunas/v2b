@@ -65,7 +65,7 @@
 			<artifactId>spring-web</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-		<!-- REST BASED JSON RESPONSES-->
+		<!-- REST BASED JSON RESPONSES -->
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
@@ -154,6 +154,7 @@
 			<artifactId>validation-api</artifactId>
 			<version>1.0.0.GA</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
@@ -199,7 +200,7 @@
 				<version>9.0.4.v20130625</version>
 				<configuration>
 					<webApp>
-						<contextPath>/v2b</contextPath>
+						<contextPath>/video2browser</contextPath>
 					</webApp>
 				</configuration>
 			</plugin>

@@ -56,7 +56,7 @@ public class UserController extends AbstractExceptionController{
 		return users;
 	}
 	
-	@RequestMapping(value="/create", method=RequestMethod.PUT)
+	@RequestMapping(value="/create", method=RequestMethod.POST)
 	public @ResponseBody User createUser(@RequestBody User user) throws ExistingEntityException{
 		log.info("REST Interface. Requesting new User");
 		return userService.createUser(user);
@@ -84,7 +84,7 @@ public class UserController extends AbstractExceptionController{
 		return u;
 	}
 	
-	@RequestMapping(value="/delete/{idUser}",method=RequestMethod.DELETE)
+	@RequestMapping(value="/{idUser}",method=RequestMethod.DELETE)
 	@ResponseStatus(value= HttpStatus.OK)
 	public void deleteUser(@PathVariable("idUser")Long idUser){
 		userService.deleteUser(idUser);
