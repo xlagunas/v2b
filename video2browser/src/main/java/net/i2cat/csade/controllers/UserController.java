@@ -56,7 +56,7 @@ public class UserController extends AbstractExceptionController{
 		return users;
 	}
 	
-	@RequestMapping(value="/create", method=RequestMethod.POST)
+	@RequestMapping(value="/create", method=RequestMethod.PUT)
 	public @ResponseBody User createUser(@RequestBody User user) throws ExistingEntityException{
 		log.info("REST Interface. Requesting new User");
 		return userService.createUser(user);
