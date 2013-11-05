@@ -1,5 +1,7 @@
 package net.i2cat.csade.configuration;
 
+import net.i2cat.csade.websocket.WebSocketMainHandler;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +13,18 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.config.EnableWebSocket;
+import org.springframework.web.socket.server.config.WebSocketConfigurer;
+import org.springframework.web.socket.server.config.WebSocketHandlerRegistry;
+import org.springframework.web.socket.support.PerConnectionWebSocketHandler;
 
 @Configuration
 @EnableWebMvc
+@EnableWebSocket
 @ComponentScan(basePackages = {"net.i2cat.csade.controllers"})
 
-public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer{
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -41,7 +49,21 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".jsp");
         return resolver;
-    }	
+    }
+	
+	@Bean
+	public WebSocketHandler WebSocketHandler(){
+		PerConnectionWebSocketHandler handler = new PerConnectionWebSocketHandler(WebSocketMainHandler.class);
+		return handler;
+	}
+
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+		registry.addHandler(WebSocketHandler(), "socket").withSockJS();
+		
+	}	
+	
+	
 	
 	
 	

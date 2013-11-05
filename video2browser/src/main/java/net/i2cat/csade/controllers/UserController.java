@@ -8,6 +8,7 @@ import java.util.List;
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.models.User;
+import net.i2cat.csade.models.User.Role;
 import net.i2cat.csade.services.FileSystemService;
 import net.i2cat.csade.services.UserService;
 
@@ -59,6 +60,7 @@ public class UserController extends AbstractExceptionController{
 	@RequestMapping(value="/create", method=RequestMethod.PUT)
 	public @ResponseBody User createUser(@RequestBody User user) throws ExistingEntityException{
 		log.info("REST Interface. Requesting new User");
+		user.setRole(Role.USER);
 		return userService.createUser(user);
 	}
 	

@@ -11,6 +11,7 @@ import net.i2cat.csade.controllers.CorsFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -42,7 +43,9 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
 	@Override
 	protected Filter[] getServletFilters() {
-		return new Filter[] {/*new HiddenHttpMethodFilter(),*/ new CorsFilter()};
+		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+		return new Filter[] {/*new HiddenHttpMethodFilter(),*/ new CorsFilter(), characterEncodingFilter};
 	}
 
 }

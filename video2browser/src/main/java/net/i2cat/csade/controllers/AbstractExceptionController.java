@@ -35,7 +35,7 @@ public abstract class AbstractExceptionController {
 		return new Error(ErrorType.USER, "User not found");
 	}
 	
-	 @RequestMapping(method = RequestMethod.OPTIONS, value="/**")
+	 @RequestMapping(method = RequestMethod.OPTIONS, value={"/users/*","/relationships/*"})
 	    public void manageOptions(HttpServletResponse response)
 	    {
 	        System.out.println("Entra al options method");
