@@ -1,4 +1,4 @@
-package net.i2cat.csade.websocket;
+package net.i2cat.csade.web.websocket;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

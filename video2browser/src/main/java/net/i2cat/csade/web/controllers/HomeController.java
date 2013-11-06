@@ -1,4 +1,4 @@
-package net.i2cat.csade.controllers;
+package net.i2cat.csade.web.controllers;
 
 import java.util.Locale;
 

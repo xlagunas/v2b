@@ -6,8 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration.Dynamic;
 
-
-import net.i2cat.csade.controllers.CorsFilter;
+import net.i2cat.csade.web.filters.CorsFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
