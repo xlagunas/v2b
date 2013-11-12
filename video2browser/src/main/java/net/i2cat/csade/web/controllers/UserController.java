@@ -17,17 +17,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-@Controller
+@RestController
 @RequestMapping("/users")
 public class UserController extends AbstractExceptionController{
 	
@@ -43,7 +42,7 @@ public class UserController extends AbstractExceptionController{
 	}
 	
 	@RequestMapping(value="/{username}", method=RequestMethod.GET)
-	public @ResponseBody User getUser(@PathVariable("username")String username) throws EntityNotFoundException{
+	public User getUser(@PathVariable("username")String username) throws EntityNotFoundException{
 		log.info("REST Interface. User with username {} was requested", username);
 		User user;
 			user = userService.findUserByUsername(username);
@@ -51,21 +50,21 @@ public class UserController extends AbstractExceptionController{
 	}
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public @ResponseBody List<User> listUsers(){
+	public List<User> listUsers(){
 		log.info("REST Interface. Requesting all Users");
 		List<User> users = userService.findAll();
 		return users;
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.PUT)
-	public @ResponseBody User createUser(@RequestBody User user) throws ExistingEntityException{
+	public User createUser(@RequestBody User user) throws ExistingEntityException{
 		log.info("REST Interface. Requesting new User");
 		user.setRole(Role.USER);
 		return userService.createUser(user);
 	}
 	
 	@RequestMapping(value="/updateAvatar/{idUser}", method=RequestMethod.POST)
-	public @ResponseBody User updateUserImage(MultipartHttpServletRequest mFile, @PathVariable("idUser")Long idUser) throws EntityNotFoundException, IllegalStateException, IOException{
+	public User updateUserImage(MultipartHttpServletRequest mFile, @PathVariable("idUser")Long idUser) throws EntityNotFoundException, IllegalStateException, IOException{
 		log.info("REST Interface. Updating Image of User id: {}",idUser);
 		User u = userService.findUserById(idUser);
 		Iterator<String> it = mFile.getFileNames();

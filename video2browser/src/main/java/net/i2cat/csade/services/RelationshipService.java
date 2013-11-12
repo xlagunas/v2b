@@ -19,4 +19,5 @@ public interface RelationshipService {
 	public List<Relationship> getRelationshipsByContact(User contact);
 
 	public boolean deleteRelationship(long idRelationship);
+	
 }

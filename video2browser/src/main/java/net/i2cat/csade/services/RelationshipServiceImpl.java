@@ -6,6 +6,7 @@ import java.util.List;
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.models.Relationship;
+import net.i2cat.csade.models.Relationship.RelationshipStatus;
 import net.i2cat.csade.models.User;
 import net.i2cat.csade.repositories.RelationshipDAO;
 
@@ -44,7 +45,17 @@ public class RelationshipServiceImpl implements RelationshipService{
 	public Relationship updateRelationship(Relationship relationship){
 		logger.info("Updating Relationship with id: {}", relationship.getIdRelationship());
 		relationship.setUpdateDate(Calendar.getInstance());
-		return relationshipDAO.updateRelationship(relationship);
+		if (relationship.getStatus() == RelationshipStatus.ACCEPTED){
+			logger.info("Relationship accepted, creating reversed relationship");
+			relationshipDAO.updateRelationship(relationship);
+			Relationship reversedRelationship = new Relationship();
+			reversedRelationship.setContact(relationship.getProposer());
+			reversedRelationship.setProposer(relationship.getContact());
+			reversedRelationship.setStatus(RelationshipStatus.ACCEPTED);
+			reversedRelationship.setUpdateDate(Calendar.getInstance());
+			relationshipDAO.addRelationship(reversedRelationship);
+		}
+		return relationship;
 	}
 
 	@Override

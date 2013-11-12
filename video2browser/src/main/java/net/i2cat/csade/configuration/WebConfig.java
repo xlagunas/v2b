@@ -21,7 +21,7 @@ import org.springframework.web.socket.support.PerConnectionWebSocketHandler;
 @Configuration
 @EnableWebMvc
 @EnableWebSocket
-@ComponentScan(basePackages = {"net.i2cat.csade.controllers"})
+@ComponentScan(basePackages = {"net.i2cat.csade.web.controllers"})
 
 public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer{
 
