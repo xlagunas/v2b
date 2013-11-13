@@ -3,12 +3,14 @@ package net.i2cat.csade.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class User {
-	public enum Role {
-		ADMIN, USER
-	}
+	public enum Role { ADMIN, USER }
+	public enum Status{ OFFLINE, AVAILABLE, BUSY, CONFERENCING}
 
 	@Id
 	@GeneratedValue
@@ -17,8 +19,13 @@ public class User {
 	private String name;
 	private String middlename;
 	private String surname;
-	private String thumbnail;
+	private String thumbnail = "default.png";
+	@JsonIgnore
 	private Role role;
+	@Transient
+	private Status status = Status.OFFLINE;
+	@JsonIgnore
+	private String password;
 
 	public User() {
 
@@ -79,5 +86,23 @@ public class User {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	
 
 }
