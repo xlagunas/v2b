@@ -13,4 +13,5 @@ public interface UserService {
 	public User findUserByUsername(String username) throws EntityNotFoundException;
 	public boolean deleteUser(long idUser);
 	public List<User> findAll();
+	public void cleanConnections();
 }

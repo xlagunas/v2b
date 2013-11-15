@@ -16,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.jolbox.bonecp.BoneCPDataSource;
@@ -24,6 +25,7 @@ import com.jolbox.bonecp.BoneCPDataSource;
 @ComponentScan(basePackages={"net.i2cat.csade.repositories", "net.i2cat.csade.services"})
 @PropertySource(value= {"classpath:video2browser.properties","db.properties"})
 @EnableTransactionManagement
+@EnableScheduling
 public class RootContext {
 	@Autowired	private Environment env;
 	private static final Logger log = LoggerFactory.getLogger(RootContext.class);

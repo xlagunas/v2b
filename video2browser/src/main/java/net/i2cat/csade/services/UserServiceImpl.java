@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,6 +83,12 @@ public class UserServiceImpl implements UserService{
 	public User updateUser(User user) {
 		logger.info("Attempting to update User with id: {}", user.getIdUser());
 		return userDAO.updateUser(user);
+	}
+	
+	@Scheduled(fixedDelay=5000)
+	@Override
+	public void cleanConnections(){
+		logger.info("entrant al scheduler");
 	}
 
 }
