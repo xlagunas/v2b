@@ -10,10 +10,10 @@ import net.i2cat.csade.exceptions.presence.UserAlreadyConnectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import com.google.common.collect.Lists;
-
+@Service
 public class PresenceServiceImpl implements PresenceService{
 	private final Logger logger = LoggerFactory.getLogger(PresenceServiceImpl.class);
 	private final Map<String, WebSocketSession> connections;
@@ -52,6 +52,7 @@ public class PresenceServiceImpl implements PresenceService{
 	@Override
 	@Scheduled(fixedRate=60000)
 	public void cleanConnections() {
+		logger.info("Hola");
 		for (WebSocketSession session : connections.values()) {
 			logger.error("NO FA RES ENCARA");
 		}
