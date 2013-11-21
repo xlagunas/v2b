@@ -5,6 +5,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
+import net.i2cat.csade.repositories.UserDAO;
+import net.i2cat.csade.repositories.UserDAOImpl;
+import net.i2cat.csade.services.UserService;
+import net.i2cat.csade.services.UserServiceImpl;
+
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.hibernate.SessionFactory;
@@ -23,9 +29,10 @@ import com.jolbox.bonecp.BoneCPDataSource;
 
 @Configuration
 @ComponentScan(basePackages={"net.i2cat.csade.repositories", "net.i2cat.csade.services"})
-@PropertySource(value= {"classpath:video2browser.properties","db.properties"})
+@PropertySource(value= {"classpath:video2browser.properties","classpath:db.properties"})
 @EnableTransactionManagement
 @EnableScheduling
+
 public class RootContext {
 	@Autowired	private Environment env;
 	private static final Logger log = LoggerFactory.getLogger(RootContext.class);
@@ -35,6 +42,15 @@ public class RootContext {
 		log.info("Initializing Root Context...");
 		
 	}
+	
+//	@Bean
+//	public UserService getUserServiceBean(){
+//		return new UserServiceImpl(getUserDAOBean());
+//	}
+//	
+//	@Bean UserDAO getUserDAOBean(){
+//		return new UserDAOImpl(sessionFactoryBean().getObject());
+//	}
 	
 	@Bean
 	public LocalSessionFactoryBean sessionFactoryBean() {
@@ -74,7 +90,6 @@ public class RootContext {
 	@Bean
 	public HibernateTransactionManager transactionManager() {
 		HibernateTransactionManager txManager = new HibernateTransactionManager();
-//		txManager.setSessionFactory(getSessionFactory());
 		txManager.setSessionFactory(sessionFactoryBean().getObject());
 		txManager.setDataSource(getDataSource());
 		return txManager;

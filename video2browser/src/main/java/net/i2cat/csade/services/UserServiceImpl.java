@@ -1,12 +1,15 @@
 package net.i2cat.csade.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,11 +87,21 @@ public class UserServiceImpl implements UserService{
 		logger.info("Attempting to update User with id: {}", user.getIdUser());
 		return userDAO.updateUser(user);
 	}
+
 	
-	@Scheduled(fixedDelay=5000)
-	@Override
-	public void cleanConnections(){
-		logger.info("entrant al scheduler");
+	public UserDetails loadUserByUsername(String username)	throws UsernameNotFoundException {
+		
+		User user = this.userDAO.getUser(username);
+		
+		if (user.getIdUser() == 0)
+			throw new UsernameNotFoundException("User not found in the database");
+		
+		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+		
+		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
 	}
+	
+	
 
 }

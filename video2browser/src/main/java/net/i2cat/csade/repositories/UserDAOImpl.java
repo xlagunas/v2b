@@ -45,9 +45,8 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public User getUser(String username) {
 		User user = (User)this.getSession().createCriteria(User.class).add(Restrictions.eq("username", username)).uniqueResult();
-		if (user == null){
+		if (user == null)
 			user = new User();
-		}
 		return user;
 	}
 

@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,7 @@ public class UserController extends AbstractExceptionController{
 		this.userService = userService;
 		this.fileSystemService = fileSystemService;
 	}
-	
+	@PreAuthorize("hasRole('USER')")
 	@RequestMapping(value="/{username}", method=RequestMethod.GET)
 	public User getUser(@PathVariable("username")String username) throws EntityNotFoundException{
 		log.info("REST Interface. User with username {} was requested", username);
