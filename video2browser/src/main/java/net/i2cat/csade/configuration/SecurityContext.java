@@ -45,6 +45,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter{
 		web.ignoring().antMatchers("/resources/**").antMatchers("/socket*");
 	}
 	
+
 	
 	
 

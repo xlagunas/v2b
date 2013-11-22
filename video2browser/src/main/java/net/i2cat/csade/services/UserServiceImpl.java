@@ -96,6 +96,7 @@ public class UserServiceImpl implements UserService{
 		if (user.getIdUser() == 0)
 			throw new UsernameNotFoundException("User not found in the database");
 		
+
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 		
