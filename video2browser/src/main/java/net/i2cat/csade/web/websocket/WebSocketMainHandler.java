@@ -14,6 +14,13 @@ public class WebSocketMainHandler extends TextWebSocketHandlerAdapter {
 	public void afterConnectionEstablished(WebSocketSession session)
 			throws Exception {
 		log.info("Connection Established");
+
+		if (session.getPrincipal()!= null){
+			log.info("principal: {}", session.getPrincipal().getName());
+		}
+		else{
+			log.info("Unauthenticated user");
+		}
 		super.afterConnectionEstablished(session);
 	}
 
@@ -21,15 +28,21 @@ public class WebSocketMainHandler extends TextWebSocketHandlerAdapter {
 	public void handleMessage(WebSocketSession session,
 			WebSocketMessage<?> message) throws Exception {
 		log.info("A Message Reached the server: {}", message.getPayload());
-
 		super.handleMessage(session, message);
 	}
 
 	@Override
-	public void afterConnectionClosed(WebSocketSession session,
-			CloseStatus status) throws Exception {
+	public void afterConnectionClosed(WebSocketSession session,	CloseStatus status) throws Exception {
 		log.info("Connection closed");
 		super.afterConnectionClosed(session, status);
 	}
+
+	@Override
+	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+		log.info("Connection error");
+		super.handleTransportError(session, exception);
+	}
+	
+	
 
 }

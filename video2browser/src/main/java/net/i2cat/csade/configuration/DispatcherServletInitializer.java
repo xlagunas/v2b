@@ -3,7 +3,6 @@ package net.i2cat.csade.configuration;
 import javax.servlet.Filter;
 import javax.servlet.ServletRegistration.Dynamic;
 
-import net.i2cat.csade.web.filters.CorsFilter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -12,6 +11,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
+//		return new Class<?>[] { RootContext.class/*, SecurityContext.class*/};
 		return new Class<?>[] { RootContext.class, SecurityContext.class};
 	}
 
@@ -35,7 +35,7 @@ public class DispatcherServletInitializer extends AbstractAnnotationConfigDispat
 	protected Filter[] getServletFilters() {
 		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
-		return new Filter[] {new CorsFilter(), characterEncodingFilter};
+		return new Filter[] {/*new CorsFilter(),*/ characterEncodingFilter};
 	}
 
 }

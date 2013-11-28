@@ -15,4 +15,6 @@ public interface UserService extends UserDetailsService{
 	public User findUserByUsername(String username) throws EntityNotFoundException;
 	public boolean deleteUser(long idUser);
 	public List<User> findAll();
+	public Boolean isUsernameAvailable(String username);
+
 }

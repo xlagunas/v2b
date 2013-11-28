@@ -2,8 +2,10 @@ package net.i2cat.csade.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +44,14 @@ public class UserController extends AbstractExceptionController{
 		this.fileSystemService = fileSystemService;
 	}
 	
+	@RequestMapping(method=RequestMethod.GET)
+    public User getLoggedUser() throws EntityNotFoundException{
+            String username =  SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userService.findUserByUsername(username);
+            return user;
+                    
+    }
+	
 	@RequestMapping(value="/{username}", method=RequestMethod.GET)
 	public User getUser(@PathVariable("username")String username) throws EntityNotFoundException{
 		log.info("REST Interface. User with username {} was requested", username);
@@ -51,6 +62,7 @@ public class UserController extends AbstractExceptionController{
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public List<User> listUsers(){
+		String username =  SecurityContextHolder.getContext().getAuthentication().getName();
 		log.info("REST Interface. Requesting all Users");
 		List<User> users = userService.findAll();
 		return users;
@@ -61,6 +73,14 @@ public class UserController extends AbstractExceptionController{
 		log.info("REST Interface. Requesting new User");
 		user.setRole(Role.USER);
 		return userService.createUser(user);
+	}
+	
+	@RequestMapping(value="/register", method=RequestMethod.POST)
+	public Map isUsernameAvailable(@RequestBody String username){
+		log.info("REST Interface. Checking availability of username");
+		Map m = new HashMap<String, String>(1);
+		m.put("available", userService.isUsernameAvailable(username));
+		return m;
 	}
 	
 	@RequestMapping(value="/updateAvatar/{idUser}", method=RequestMethod.POST)

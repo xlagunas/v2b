@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -54,6 +55,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+//	@PreAuthorize("hasRole('ADMIN')")
 	public User findUserByUsername(String username)	throws EntityNotFoundException {
 		logger.info("Attempting to get User with username: {}", username );
 		User user = userDAO.getUser(username);
@@ -65,6 +67,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+//	@PreAuthorize("hasRole('ADMIN')")
 	public boolean deleteUser(long idUser) {
 		try{
 			logger.info("Attempting to delete User with id: {}", idUser);
@@ -77,6 +80,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+//	@PreAuthorize("hasRole('ADMIN')")
 	public List<User> findAll() {
 		logger.info("Requesting all Users in the database");
 		return userDAO.getAll();
@@ -100,6 +104,11 @@ public class UserServiceImpl implements UserService{
 		authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
 		
 		return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+	}
+	
+	@Override
+	public Boolean isUsernameAvailable(String username){
+		return userDAO.isUsernameAvailable(username);
 	}
 	
 	

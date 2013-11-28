@@ -5,12 +5,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.sql.DataSource;
 
-import net.i2cat.csade.repositories.UserDAO;
-import net.i2cat.csade.repositories.UserDAOImpl;
-import net.i2cat.csade.services.UserService;
-import net.i2cat.csade.services.UserServiceImpl;
-
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.hibernate.SessionFactory;
@@ -25,6 +19,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+
 import com.jolbox.bonecp.BoneCPDataSource;
 
 @Configuration
@@ -32,26 +27,15 @@ import com.jolbox.bonecp.BoneCPDataSource;
 @PropertySource(value= {"classpath:video2browser.properties","classpath:db.properties"})
 @EnableTransactionManagement
 @EnableScheduling
-
 public class RootContext {
 	@Autowired	private Environment env;
 	private static final Logger log = LoggerFactory.getLogger(RootContext.class);
 
-	
 	public RootContext() {
 		log.info("Initializing Root Context...");
 		
 	}
-	
-//	@Bean
-//	public UserService getUserServiceBean(){
-//		return new UserServiceImpl(getUserDAOBean());
-//	}
-//	
-//	@Bean UserDAO getUserDAOBean(){
-//		return new UserDAOImpl(sessionFactoryBean().getObject());
-//	}
-	
+		
 	@Bean
 	public LocalSessionFactoryBean sessionFactoryBean() {
 		LocalSessionFactoryBean result = new LocalSessionFactoryBean();
@@ -94,6 +78,5 @@ public class RootContext {
 		txManager.setDataSource(getDataSource());
 		return txManager;
 	}
-
-
+		
 }

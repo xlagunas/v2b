@@ -42,11 +42,18 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 		return cmr;
 	}
 
+//	@Bean
+//    public InternalResourceViewResolver getInternalResourceViewResolver() {
+//        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+//        resolver.setPrefix("/WEB-INF/views/");
+//        resolver.setSuffix(".jsp");
+//        return resolver;
+//    }
 	@Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setPrefix("/WEB-INF/views/");
-        resolver.setSuffix(".jsp");
+        resolver.setPrefix("/app/");
+        resolver.setSuffix(".html");
         return resolver;
     }
 	
@@ -56,16 +63,11 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebSocketConfi
 		return handler;
 	}
 
-	@Override
+
+	
+@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(WebSocketHandler(), "socket").withSockJS();
 		
 	}	
-	
-	
-	
-	
-	
-	
-
 }
