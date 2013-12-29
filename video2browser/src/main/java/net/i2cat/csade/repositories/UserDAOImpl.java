@@ -2,9 +2,14 @@ package net.i2cat.csade.repositories;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,5 +91,28 @@ public class UserDAOImpl implements UserDAO {
 		this.getSession().update(user);
 		return user;
 	}
-	
+	/**
+	 * This method aims to find all users whose username matches the 
+	 * keyword and also are not related (doesn't have any relation) with a given user
+	 * 
+	 * @param user User to check against contacts
+	 * 
+	 * @param keyword Filter keyword which text ought to be contained in all returned users
+	 * */
+	@Override
+	public List<User> getNonRelatedUsersMatchingKeyword(User user, String keyword){
+		DetachedCriteria dc = DetachedCriteria.forClass(Relationship.class)
+				.add(Restrictions.eq("proposer", user))
+				.setProjection(Projections.property("contact.idUser"));
+		
+		@SuppressWarnings("unchecked")
+		List<User> users = 
+			this.getSession().createCriteria(User.class, "user")
+				.add(Restrictions.ilike("username", keyword, MatchMode.ANYWHERE))
+				.add(Subqueries.propertyNotIn("user.idUser", dc))
+
+				.list();
+		return users;
+	}
+		
 }

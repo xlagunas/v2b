@@ -1,19 +1,25 @@
 package net.i2cat.csade.repositories;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.DetachedCriteria;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.Subqueries;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import net.i2cat.csade.models.Relationship;
+import net.i2cat.csade.models.Relationship.RelationshipStatus;
 import net.i2cat.csade.models.User;
 
 
@@ -90,5 +96,21 @@ public class RelationshipDAOImpl implements RelationshipDAO {
 				.uniqueResult()!=null
 				?true:false;
 	}
+
+
+	@Override
+	public List<Relationship> getRelationshipsByStatus(long idUser, RelationshipStatus status) {
+		
+		String userType = (status == RelationshipStatus.REQUESTED)?"contact":"proposer";
+		
+		return getSession().createCriteria(Relationship.class, "rel")
+				.createAlias(userType, "c")
+				.add(Restrictions.eq("c.idUser", idUser))
+				.add(Restrictions.eq("status", status))
+			.list();
+	}
+	
+	
+	
 	
 }

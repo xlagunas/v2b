@@ -6,11 +6,13 @@ import net.i2cat.csade.configuration.RootContext;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.models.Relationship;
+import net.i2cat.csade.models.Relationship.RelationshipStatus;
 import net.i2cat.csade.models.User;
 import net.i2cat.csade.models.User.Role;
 import net.i2cat.csade.services.RelationshipService;
 import net.i2cat.csade.services.UserService;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -31,7 +33,7 @@ public class RelationshipServiceImplTest {
 	
 	private static final Logger logger = LoggerFactory.getLogger(RelationshipServiceImplTest.class);
 
-	@Test
+	@Test@Ignore
 	public void createRelationshipUsers() {
 		logger.info("Creating RelationshipUsers....");
 		for (int i=0;i<2;i++){
@@ -55,7 +57,7 @@ public class RelationshipServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void createRelationship(){
 		try {
 			User proposer = userService.findUserByUsername("user_0");
@@ -72,7 +74,7 @@ public class RelationshipServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void findRelationshipsByContact(){
 		User contact;
 		try {
@@ -84,7 +86,7 @@ public class RelationshipServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void findRelationshipsByProposer(){
 		//Que passa si busquem un contacte que no té cap?
 		User contact;
@@ -96,7 +98,7 @@ public class RelationshipServiceImplTest {
 			logger.error(e.getMessage());
 		}
 	}
-	@Test
+	@Test@Ignore
 	public void findRelationshipsByProposer2(){
 		User proposer;
 		try {
@@ -106,6 +108,16 @@ public class RelationshipServiceImplTest {
 		} catch (EntityNotFoundException e) {
 			logger.error(e.getMessage());
 		}
+	}
+	
+	@Test
+	public void getByRelationshipType(){
+		List<Relationship> r = this.relationshipService.getRelationshipsByStatus(7, RelationshipStatus.ACCEPTED);
+		List<Relationship> r1 = this.relationshipService.getRelationshipsByStatus(7, RelationshipStatus.BLOCKED);
+		List<Relationship> r2 = this.relationshipService.getRelationshipsByStatus(7, RelationshipStatus.REJECTED);
+		List<Relationship> r3 = this.relationshipService.getRelationshipsByStatus(7, RelationshipStatus.REQUESTED);
+		
+		System.out.println(String.format("ACCEPTED: %d BLOCKED: %d REJECTED: %d REQUESTED: %d", r.size(),r1.size(),r2.size(),r3.size() ));
 	}
 	
 }

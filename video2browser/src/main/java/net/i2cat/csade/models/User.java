@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import org.springframework.web.socket.WebSocketSession;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -26,6 +28,9 @@ public class User {
 	private Status status = Status.OFFLINE;
 	@JsonIgnore
 	private String password;
+	@Transient
+	@JsonIgnore
+	private WebSocketSession session;
 
 	public User() {
 
@@ -102,6 +107,16 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+
+	public WebSocketSession getSession() {
+		return session;
+	}
+
+	public void setSession(WebSocketSession session) {
+		this.session = session;
+	}
+	
+	
 	
 	
 

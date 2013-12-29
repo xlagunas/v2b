@@ -111,6 +111,12 @@ public class UserServiceImpl implements UserService{
 		return userDAO.isUsernameAvailable(username);
 	}
 	
+	@Override
+	public List<User> getNonRelatedUsersMatchingKeyword(User user, String keyword){
+		return userDAO.getNonRelatedUsersMatchingKeyword(user, keyword);
+	}
+	
+	
 	
 
 }

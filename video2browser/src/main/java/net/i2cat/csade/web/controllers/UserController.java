@@ -2,6 +2,7 @@ package net.i2cat.csade.web.controllers;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -9,9 +10,11 @@ import java.util.Map;
 
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
+import net.i2cat.csade.models.Relationship;
 import net.i2cat.csade.models.User;
 import net.i2cat.csade.models.User.Role;
 import net.i2cat.csade.services.FileSystemService;
+import net.i2cat.csade.services.RelationshipService;
 import net.i2cat.csade.services.UserService;
 
 import org.apache.commons.io.FilenameUtils;
@@ -36,14 +39,19 @@ public class UserController extends AbstractExceptionController{
 	private final static Logger log = LoggerFactory.getLogger(UserController.class);
 	private final UserService userService;
 	private final FileSystemService fileSystemService;
+	private final RelationshipService relationshipService;
 	
 	@Autowired
-	public UserController(UserService userService, FileSystemService fileSystemService) {
+	public UserController(UserService userService, FileSystemService fileSystemService, RelationshipService relationshipService) {
 		log.info("Initializing User controller...");
 		this.userService = userService;
 		this.fileSystemService = fileSystemService;
+		this.relationshipService = relationshipService;
 	}
-	
+	@RequestMapping(value="/newUser",method=RequestMethod.GET)
+	public String createNewUser(){
+		return "newUser";
+	}
 	@RequestMapping(method=RequestMethod.GET)
     public User getLoggedUser() throws EntityNotFoundException{
             String username =  SecurityContextHolder.getContext().getAuthentication().getName();
@@ -60,12 +68,16 @@ public class UserController extends AbstractExceptionController{
 		return user;
 	}
 	
-	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public List<User> listUsers(){
-		String username =  SecurityContextHolder.getContext().getAuthentication().getName();
+	@RequestMapping(value="/list", method=RequestMethod.POST)
+	public List<User> listUsers(@RequestBody User user){
 		log.info("REST Interface. Requesting all Users");
-		List<User> users = userService.findAll();
-		return users;
+		List<Relationship> relationships = relationshipService.getRelationshipsByProposer(user);
+		List<User> contacts = new ArrayList<User>(relationships.size());
+		for (Relationship r : relationships) {
+			contacts.add(r.getContact());
+		}
+//		List<User> users = userService.findAll();
+		return contacts;
 	}
 	
 	@RequestMapping(value="/create", method=RequestMethod.PUT)
@@ -81,6 +93,13 @@ public class UserController extends AbstractExceptionController{
 		Map m = new HashMap<String, String>(1);
 		m.put("available", userService.isUsernameAvailable(username));
 		return m;
+	}
+	
+	@RequestMapping(value="/search/{keyword}", method=RequestMethod.POST)
+	public List<User> searchContacts(@PathVariable("keyword")String keyword, @RequestBody User user){
+		log.info("REST Interface. searching for contacts of User id: {}",user.getIdUser());
+		return this.userService.getNonRelatedUsersMatchingKeyword(user, keyword);
+
 	}
 	
 	@RequestMapping(value="/updateAvatar/{idUser}", method=RequestMethod.POST)

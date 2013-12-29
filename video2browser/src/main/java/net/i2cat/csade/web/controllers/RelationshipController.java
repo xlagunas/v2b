@@ -5,6 +5,7 @@ import java.util.List;
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.models.Relationship;
+import net.i2cat.csade.models.Relationship.RelationshipStatus;
 import net.i2cat.csade.models.User;
 import net.i2cat.csade.services.RelationshipService;
 import net.i2cat.csade.services.UserService;
@@ -13,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +35,7 @@ public class RelationshipController extends AbstractExceptionController {
 		this.relationshipService = relationshipService;
 		this.userService = userService;
 	}
+	
 	@RequestMapping(value="/list",method=RequestMethod.POST )
 	public List<Relationship> getContactRelationships(@RequestBody User user){
 		log.info("REST Interface. Requesting friendships whose contact is {}", user.getUsername());
@@ -40,14 +43,11 @@ public class RelationshipController extends AbstractExceptionController {
 		return relations;
 	}
 	
+	
+	
 	@RequestMapping(value="/create", method=RequestMethod.PUT)
-	public Relationship addRelationship(@RequestParam("proposer")String proposer, @RequestParam("contact")String contact) throws EntityNotFoundException, ExistingEntityException{
+	public Relationship addRelationship(@RequestBody Relationship relationship) throws EntityNotFoundException, ExistingEntityException{
 		log.info("REST Interface. Requesting new Relationship");
-		Relationship relationship = new Relationship();
-		User proposerUser = userService.findUserByUsername(proposer);
-		User contactUser = userService.findUserByUsername(contact);
-		relationship.setContact(contactUser);
-		relationship.setProposer(proposerUser);
 		return relationshipService.addRelationship(relationship);
 	}
 	
@@ -56,5 +56,11 @@ public class RelationshipController extends AbstractExceptionController {
 	public void updateRelationship(@RequestBody Relationship relationship){
 		log.info("REST Interface. Requesting Relationship update");
 		relationshipService.updateRelationship(relationship);
+	}
+	
+	@RequestMapping(value="/requested/{idUser}", method=RequestMethod.GET)
+	public List<Relationship> getPendingRelationships(@PathVariable("idUser") long idUser){
+		return relationshipService.getRelationshipsByStatus(idUser, RelationshipStatus.REQUESTED);
+	
 	}
 }

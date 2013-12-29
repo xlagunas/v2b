@@ -45,9 +45,10 @@ public class RelationshipServiceImpl implements RelationshipService{
 	public Relationship updateRelationship(Relationship relationship){
 		logger.info("Updating Relationship with id: {}", relationship.getIdRelationship());
 		relationship.setUpdateDate(Calendar.getInstance());
+		relationshipDAO.updateRelationship(relationship);
+
 		if (relationship.getStatus() == RelationshipStatus.ACCEPTED){
 			logger.info("Relationship accepted, creating reversed relationship");
-			relationshipDAO.updateRelationship(relationship);
 			Relationship reversedRelationship = new Relationship();
 			reversedRelationship.setContact(relationship.getProposer());
 			reversedRelationship.setProposer(relationship.getContact());
@@ -55,6 +56,7 @@ public class RelationshipServiceImpl implements RelationshipService{
 			reversedRelationship.setUpdateDate(Calendar.getInstance());
 			relationshipDAO.addRelationship(reversedRelationship);
 		}
+
 		return relationship;
 	}
 
@@ -93,6 +95,11 @@ public class RelationshipServiceImpl implements RelationshipService{
 			return false;
 		}
 	}
+	@Override
+	public List<Relationship> getRelationshipsByStatus(long idUser, RelationshipStatus status){
+		return relationshipDAO.getRelationshipsByStatus(idUser, status);
+	}
+
 	
 
 }

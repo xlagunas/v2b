@@ -13,4 +13,6 @@ public interface UserDAO {
 	public void deleteUser(long idUser);
 	public boolean isUsernameAvailable(String username);
 	public List<User> getAll();
+	public List<User> getNonRelatedUsersMatchingKeyword(User user, String keyword);
+
 }

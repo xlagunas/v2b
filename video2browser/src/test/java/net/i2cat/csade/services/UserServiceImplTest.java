@@ -1,12 +1,16 @@
 package net.i2cat.csade.services;
 
+import java.util.List;
+
 import net.i2cat.csade.configuration.RootContext;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.models.User;
 import net.i2cat.csade.models.User.Role;
+import net.i2cat.csade.repositories.UserDAO;
 import net.i2cat.csade.services.UserService;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -23,9 +27,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserServiceImplTest {
 	@Autowired UserService userService;
+	@Autowired UserDAO userDAO;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserServiceImplTest.class);
 
-	@Test
+	@Test@Ignore
 	public void addUser() {
 		User u = new User();
 		u.setUsername("xlagunas");
@@ -46,7 +52,7 @@ public class UserServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void loadUserById(){
 		logger.info("Atempting to get User xlagunas by id");
 		try {
@@ -57,7 +63,7 @@ public class UserServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void loadUserByUsername(){
 		logger.info("Atempting to get User xlagunas by username");
 		try {
@@ -68,10 +74,19 @@ public class UserServiceImplTest {
 		}
 	}
 	
-	@Test
+	@Test@Ignore
 	public void deleteUserById(){
 		logger.info("Attempting to delete User 1");
 		logger.info("Deletion finished with status: {}",userService.deleteUser(1));
+	}
+	
+	@Test
+	public void addContacts() throws EntityNotFoundException{
+		User u = userService.findUserByUsername("user_0");
+		List<User> userList = userDAO.getNonRelatedUsersMatchingKeyword(u, "_1"); 
+		for (User user : userList) {
+			System.out.println(user.getUsername());
+		}
 	}
 
 }

@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Relationship {
 	public enum RelationshipStatus {ACCEPTED, REQUESTED, REJECTED, BLOCKED}
@@ -14,6 +16,7 @@ public class Relationship {
 	@Id@GeneratedValue
 	private long idRelationship;
 	@OneToOne
+//	@JsonIgnore()
 	private User proposer;
 	@OneToOne
 	private User contact;

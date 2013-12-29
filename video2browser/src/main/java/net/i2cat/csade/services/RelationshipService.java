@@ -6,6 +6,7 @@ import net.i2cat.csade.exceptions.entity.EntityNotFoundException;
 import net.i2cat.csade.exceptions.entity.ExistingEntityException;
 import net.i2cat.csade.models.Relationship;
 import net.i2cat.csade.models.User;
+import net.i2cat.csade.models.Relationship.RelationshipStatus;
 
 public interface RelationshipService {
 	public Relationship addRelationship(Relationship relationship) throws ExistingEntityException;
@@ -19,5 +20,8 @@ public interface RelationshipService {
 	public List<Relationship> getRelationshipsByContact(User contact);
 
 	public boolean deleteRelationship(long idRelationship);
+	
+	public List<Relationship> getRelationshipsByStatus(long idUser, RelationshipStatus status);
+
 	
 }

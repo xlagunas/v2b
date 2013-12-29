@@ -16,5 +16,7 @@ public interface UserService extends UserDetailsService{
 	public boolean deleteUser(long idUser);
 	public List<User> findAll();
 	public Boolean isUsernameAvailable(String username);
+	public List<User> getNonRelatedUsersMatchingKeyword(User user, String keyword);
+
 
 }
