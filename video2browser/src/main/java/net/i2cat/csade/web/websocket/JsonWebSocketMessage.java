@@ -21,7 +21,7 @@ public class JsonWebSocketMessage implements Serializable {
 	}
 
 	public enum Method {
-		ROSTER_ADD, ROSTER_DELETE, ROSTER_LIST, CALL_JOIN, CALL_CREATE, CALL_INVITE, WEBRTC_ADD_ICE_CANDIDATE, WEBRTC_SEND_OFFER, WEBRTC_SEND_ANSWER
+		ROSTER_ADD, ROSTER_DELETE, ROSTER_LIST, CALL_ACCEPT, CALL_REJECT, CALL_JOIN, CALL_CREATE, CALL_INVITE, WEBRTC_ADD_ICE_CANDIDATE, WEBRTC_SEND_OFFER, WEBRTC_SEND_ANSWER
 	}
 
 	private Header header;
@@ -84,6 +84,28 @@ public class JsonWebSocketMessage implements Serializable {
 		message.setContent(content);
 		message.setHeader(header);
 		message.setMethod(method);
+
+		ObjectMapper mapper = new ObjectMapper();
+
+		String output;
+		try {
+			output = mapper.writeValueAsString(message);
+			return new TextMessage(output);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return new TextMessage("{'error': 'parsing error'}");
+	}
+	
+	public static TextMessage createMessage(Header header, Method method,String sender, String receiver,
+			Object content) {
+		JsonWebSocketMessage message = new JsonWebSocketMessage();
+		message.setContent(content);
+		message.setHeader(header);
+		message.setMethod(method);
+		message.setSender(sender);
+		message.setReceiver(receiver);
 
 		ObjectMapper mapper = new ObjectMapper();
 

@@ -56,17 +56,22 @@ public class WebSocketMainHandler extends TextWebSocketHandler {
 		
 		switch(rcvMessage.getHeader()){
 		case CALL:
+			String receiver;
 			Room room = mapper.convertValue(rcvMessage.getContent(), Room.class);
 			switch(rcvMessage.getMethod()){
 			case CALL_CREATE:
 				roomService.addRoom(room);
-				session.sendMessage(JsonWebSocketMessage.createMessage(Header.CALL_ACK, Method.CALL_CREATE, room));
-				String receiver = rcvMessage.getReceiver();
+//				session.sendMessage(
+//						JsonWebSocketMessage.createMessage(Header.CALL_ACK,	Method.CALL_CREATE,
+//						rcvMessage.getSender(),rcvMessage.getReceiver(),room));
+				receiver = rcvMessage.getReceiver();
 				if (receiver != null){
 					User dstUser = presenceService.getConnection(receiver);
 					WebSocketSession dstSession = dstUser.getSession();
 					if (dstSession.isOpen()){
-						dstSession.sendMessage(JsonWebSocketMessage.createMessage(Header.CALL_ACK, Method.CALL_INVITE, room));
+						dstSession.sendMessage(
+								JsonWebSocketMessage.createMessage(Header.CALL_ACK, Method.CALL_INVITE,
+								rcvMessage.getSender(),rcvMessage.getReceiver(), room));
 					}
 				}
 				break;
@@ -82,6 +87,16 @@ public class WebSocketMainHandler extends TextWebSocketHandler {
 				
 				break;
 			default:
+				log.debug("Entra al debug del default");
+				receiver = rcvMessage.getReceiver();
+				if (receiver!=null){
+					User u = presenceService.getConnection(receiver);
+					WebSocketSession s = u.getSession();
+					if (s.isOpen()){
+						s.sendMessage(JsonWebSocketMessage.createMessage(Header.CALL_ACK, rcvMessage.getMethod(),
+								rcvMessage.getSender(), rcvMessage.getReceiver(), rcvMessage.getContent()));
+					}
+				}
 				break;
 			}
 			
@@ -92,8 +107,8 @@ public class WebSocketMainHandler extends TextWebSocketHandler {
 			//Server doesn't process webRTC messages, just forwards it to its receiver
 			String destination = rcvMessage.getReceiver();
 			if (destination!= null){
-				User receiver = presenceService.getConnection(destination);
-				WebSocketSession receiverSession = receiver.getSession();
+				User dst = presenceService.getConnection(destination);
+				WebSocketSession receiverSession = dst.getSession();
 				if (receiverSession.isOpen()){
 					receiverSession.sendMessage(message);
 				}
