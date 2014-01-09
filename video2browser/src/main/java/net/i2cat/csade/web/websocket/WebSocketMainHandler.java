@@ -61,9 +61,6 @@ public class WebSocketMainHandler extends TextWebSocketHandler {
 			switch(rcvMessage.getMethod()){
 			case CALL_CREATE:
 				roomService.addRoom(room);
-//				session.sendMessage(
-//						JsonWebSocketMessage.createMessage(Header.CALL_ACK,	Method.CALL_CREATE,
-//						rcvMessage.getSender(),rcvMessage.getReceiver(),room));
 				receiver = rcvMessage.getReceiver();
 				if (receiver != null){
 					User dstUser = presenceService.getConnection(receiver);
@@ -84,7 +81,16 @@ public class WebSocketMainHandler extends TextWebSocketHandler {
 				roomService.addUsertoRoom(room.getId(), user);
 				break;
 			case CALL_INVITE:
+				receiver = rcvMessage.getReceiver();
 				
+				if (receiver != null){
+					User rcvUser = presenceService.getConnection(receiver);
+					WebSocketSession s = rcvUser.getSession();
+					if (s.isOpen()){
+						s.sendMessage(JsonWebSocketMessage.createMessage(Header.CALL_ACK, rcvMessage.getMethod(),
+								rcvMessage.getSender(), rcvMessage.getReceiver(), roomService.findRoom(room.getId())));
+					}
+				}
 				break;
 			default:
 				log.debug("Entra al debug del default");
