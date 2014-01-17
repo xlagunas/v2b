@@ -13,20 +13,19 @@ public class Room {
 
 	private String id;
 	private RoomType roomType;
+	private List<User> users;
 
+	@SuppressWarnings("restriction")
+	public Room() {
+		id = new sun.misc.BASE64Encoder().encode(RoomUtils.asByteArray(UUID.randomUUID())).split("=")[0];
+	}
+	
 	public RoomType getRoomType() {
 		return roomType;
 	}
 
 	public void setRoomType(RoomType roomType) {
 		this.roomType = roomType;
-	}
-
-	private List<User> users;
-
-	@SuppressWarnings("restriction")
-	public Room() {
-		id = new sun.misc.BASE64Encoder().encode(RoomUtils.asByteArray(UUID.randomUUID())).split("=")[0];
 	}
 
 	public String getId() {
